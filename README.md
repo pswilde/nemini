@@ -1,6 +1,8 @@
 # Nemini
 A VERY basic Gemini server.  
 Leveraging the good work done by @benob for the [Nim Gemini Library](https://github.com/benob/gemini/blob/master/src/gemini.nim)
+[![Build Status](https://nimble.directory/ci/badges/jester/nimdevel/status.svg)](https://nimble.directory/ci/badges/jester/nimdevel/output.html)
+
 ## Features
 * Will currently only serve static files
 * Has a sort of virtual host capability (with multiple aliases)
