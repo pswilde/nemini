@@ -1,4 +1,4 @@
-import asyncdispatch,os,sugar
+import asyncdispatch,os,osproc,sugar,strutils
 import gemini
 import parsetoml
 
@@ -38,6 +38,19 @@ proc getPage(s: Site, path: string): string =
   else:
     return ""
 
+proc createCerts(site: Site): bool =
+  echo "Creating certificates for " & site.name
+  let cmd = "openssl req -new -newkey rsa:4096 -days 365 -subj \"/C=US/ST=Denial/L=Springfield/O=Dis/CN=" & site.base_url & "\" -nodes -x509 -keyout " & site.private_key & " -out " & site.fullchain
+  let output = execCmd(cmd)
+  return output == 0
+
+proc hasCerts(site: Site): bool =
+  if fileExists(site.fullchain) and fileExists(site.private_key):
+    return true
+  else:
+    return createCerts(site)
+  return false
+
 proc getConfig(): Nemini =
   var nemini = Nemini()
   var dir = "config"
@@ -52,6 +65,8 @@ proc getConfig(): Nemini =
       for x in toml["aliases"].getElems:
         site.aliases.add(x.getStr)
     site.root_dir = toml.getOrDefault("root_dir").getStr
+    if site.root_dir.contains("{pwd}"):
+      site.root_dir = site.root_dir.replace("{pwd}",getCurrentDir())
     site.fullchain = toml.getOrDefault("fullchain").getStr
     site.private_key = toml.getOrDefault("private_key").getStr
     if toml.hasKey("port"):
@@ -85,7 +100,8 @@ when isMainModule:
   echo "Starting Nemini..."
   for site in config.sites:
     echo "Starting site ", site.name, " on gemini://", site.base_url, ":", site.port
-    var server = newAsyncGeminiServer(certFile = site.fullchain, keyFile = site.private_key)
-    # TODO send the site into the handle callback for less work finding the site later
-    asyncCheck server.serve(Port(site.port), handle)
+    if site.hasCerts():
+      var server = newAsyncGeminiServer(certFile = site.fullchain, keyFile = site.private_key)
+      # TODO send the site into the handle callback for less work finding the site later
+      asyncCheck server.serve(Port(site.port), handle)
   runForever()
