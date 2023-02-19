@@ -1,0 +1,11 @@
+[Unit]
+Description=Nemini - The simple Gemini server service
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=5s
+ExecStart=/opt/nemini/nemini
+
+[Install]
+WantedBy=multi-user.target
