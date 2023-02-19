@@ -89,16 +89,20 @@ proc findSite(url: string): Site =
   return site[0]
 
 proc handle(req: AsyncRequest) {.async.} =
-  # TODO go and find the site - not ideal, need to work out how to send the site the callback
-  let site = findSite(req.url.hostname)
-  # TODO if a file exists in the root directory use it, if not show an error
-  let page = site.getPage(req.url.path)
-  if page != "":
-    echo "OK : ", req.url.path
-    await req.respond(Success, "text/gemini", page)
-  else:
-    echo "NotFound : ", req.url.path
-    await req.respond(NotFound, "text/gemini", "# Page Not Found!")
+  try:
+    # TODO go and find the site - not ideal, need to work out how to send the site the callback
+    let site = findSite(req.url.hostname)
+    # TODO if a file exists in the root directory use it, if not show an error
+    let page = site.getPage(req.url.path)
+    if page != "":
+      echo "OK : ", req.url.path
+      await req.respond(Success, "text/gemini", page)
+    else:
+      echo "NotFound : ", req.url.path
+      await req.respond(NotFound, "text/gemini", "# Page Not Found!")
+  except:
+    echo "ERROR: " & getCurrentExceptionMsg()
+    await req.respond(ERROR, "text/gemini", "# Server Error")
 
 when isMainModule:
   echo "Starting Nemini..."
