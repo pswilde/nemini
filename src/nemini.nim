@@ -40,7 +40,10 @@ proc getPage(s: Site, path: string): string =
 
 proc getConfig(): Nemini =
   var nemini = Nemini()
-  for f in walkDir("config"):
+  var dir = "config"
+  if dirExists("/etc/nemini"):
+    dir = "/etc/nemini"
+  for f in walkDir(dir):
     var site = newSite()
     let toml = parsetoml.parseFile(f.path)
     site.name = toml.getOrDefault("name").getStr
@@ -81,7 +84,7 @@ proc handle(req: AsyncRequest) {.async.} =
 when isMainModule:
   echo "Starting Nemini..."
   for site in config.sites:
-    echo "Starting site ", site.name
+    echo "Starting site ", site.name, " on gemini://", site.base_url, ":", site.port
     var server = newAsyncGeminiServer(certFile = site.fullchain, keyFile = site.private_key)
     # TODO send the site into the handle callback for less work finding the site later
     asyncCheck server.serve(Port(site.port), handle)
