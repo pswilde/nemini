@@ -1,5 +1,5 @@
 certs
-config
 nemini
 
+config/*
 !config/demo_site.toml

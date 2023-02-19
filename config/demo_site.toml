@@ -1,0 +1,7 @@
+name = "demo site"
+base_url = "localhost"
+root_dir = "{pwd}/demo_site"
+index = "index.gemini"
+fullchain = "certs/cert.pem"
+private_key = "certs/privkey.pem"
+port = 1965
