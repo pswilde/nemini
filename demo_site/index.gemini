@@ -1,3 +1,6 @@
-# Hi
-this is an example
-=> another_page
+# Nemini
+The simple Gemini server
+It looks like things are running, that's great!
+Copy this demo_site.toml file in your config and edit to your needs.
+
+Good luck!
