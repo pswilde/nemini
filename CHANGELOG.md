@@ -10,3 +10,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added 
 
 ### Fixed
+
+## [0.1.0]
+
+### Added
+- First release
+- Will serve static files only
+- Certificates generated on start up unless they already exist
