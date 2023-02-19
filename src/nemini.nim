@@ -68,7 +68,11 @@ proc getConfig(): Nemini =
     if site.root_dir.contains("{pwd}"):
       site.root_dir = site.root_dir.replace("{pwd}",getCurrentDir())
     site.fullchain = toml.getOrDefault("fullchain").getStr
+    if site.fullchain == "":
+      site.fullchain = "certs/" & site.base_url & ".cert"
     site.private_key = toml.getOrDefault("private_key").getStr
+    if site.private_key == "":
+      site.private_key = "certs/" & site.base_url & ".key"
     if toml.hasKey("port"):
       site.port = toml.getOrDefault("port").getInt
     nemini.sites.add(site)
