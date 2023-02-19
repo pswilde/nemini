@@ -17,7 +17,11 @@ Leveraging the good work done by @benob for the [Nim Gemini Library](https://git
 The Nim Gemini Library requires certificates, so Nemini does too. These can be generated as follows:
 ```sh
 openssl req -new -x509 -keyout <dir/priv.key> -out <dir/server.cert>
+# If your key gets generated with a password, you can remove the password by:
+openssl rsa -in <dir/priv.key> -out <dir/passwordless.key> 
 ```
 or use other types of certificate, i.e. LetsEncrypt/Certbot etc.
+
+
 
 
