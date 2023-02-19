@@ -22,6 +22,10 @@ openssl rsa -in <dir/priv.key> -out <dir/passwordless.key>
 ```
 or use other types of certificate, i.e. LetsEncrypt/Certbot etc.
 
+## Static files
+Nemini is able to serve static gemtext files from your root directory or subdirectories.  
+Your static files must use the extension `.gemini`, `.gmi`, `.gmni` or have no extension. Currently, other file extensions are not supported, but easily fixed if there's need for it. 
+
 
 
 
