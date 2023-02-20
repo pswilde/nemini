@@ -112,7 +112,7 @@ proc handle(req: AsyncRequest) {.async.} =
 
 when isMainModule:
   if len(nemini.listeners) > 0:
-    echo "Starting Nemini..."
+    echo "Starting Nemini version : " & nemini.version
     for l in nemini.listeners:
       echo "Starting listener on port : ", l.port
       if l.hasCerts():
