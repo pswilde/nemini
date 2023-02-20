@@ -48,6 +48,7 @@ proc getPage(s: Site, path: string): string =
   return content
 
 proc createCerts(l: Listener): bool =
+  createDir("certs")
   let base_site = l.sites[0]
   echo "Creating certificates for ", base_site.name
   let cn = base_site.base_url

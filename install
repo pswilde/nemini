@@ -1,0 +1,7 @@
+#!/bin/bash
+
+mkdir certs /etc/nemini -p
+if [ ! -f /etc/nemini/nemini.toml ]; then
+    echo Creating initial config file
+    cp ./config/nemini.sample.toml /etc/nemini/
+fi
