@@ -19,8 +19,5 @@ If certificates don't exist they will be created via openssl when first run.
 
 ## Static files
 Nemini is able to serve static gemtext files from your root directory or subdirectories.  
-Your static files must use the extension `.gemini`, `.gmi`, `.gmni` or have no extension. Currently, other file extensions are not supported, but easily fixed if there's need for it. 
-
-
-
+Your static files must use the extension `.gemini`, `.gmi` or `.gmni`. Currently, other file extensions are not supported, but easily fixed if there's need for it. 
 
