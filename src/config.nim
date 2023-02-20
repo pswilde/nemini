@@ -30,7 +30,7 @@ proc getVersion(): string =
 
 const VERSION = getVersion()
 
-proc newNemini(): Nemini =
+proc newNemini*(): Nemini =
   return Nemini(version: VERSION)
 
 proc newSite(): Site =
@@ -56,14 +56,11 @@ proc getNeminiConfig*(file: string): Nemini =
   var cfg = "./config/nemini.sample.toml"
   if file != "":
     cfg = file
-    echo cfg, "1"
   else:
     if fileExists("/etc/nemini/nemini.toml"):
       cfg = "/etc/nemini/nemini.toml"
-      echo cfg, "2"
     elif fileExists("./config/nemini.toml"):
       cfg = "./config/nemini.toml"
-      echo cfg, "3"
   echo "Using config from : ", cfg
   if not fileExists(cfg):
     echo "Config file does not exist"

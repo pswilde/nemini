@@ -10,6 +10,10 @@ p.initParser("Nemini - A simple Gemini server"):
   p.addFlag("-v", "--version", help="shows the current nemini version")#, default="/etc/nemini/nemini.toml")
 
 var opts = p.parseOptions()
+if opts.isSet("v") or opts.isSet("version"):
+  echo newNemini().version
+  quit(0)
+
 let nemini = getNeminiConfig(opts["config"])
 
 
@@ -75,9 +79,7 @@ proc handle(req: AsyncRequest) {.async.} =
 
 
 when isMainModule:
-  if opts.isSet("v") or opts.isSet("version"):
-    echo nemini.version
-  elif len(nemini.listeners) > 0:
+  if len(nemini.listeners) > 0:
     echo "Starting Nemini..."
     for l in nemini.listeners:
       echo "Starting listener on port : ", l.port
