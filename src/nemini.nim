@@ -7,9 +7,11 @@ import simpleargs
 var p: ParseSchema
 p.initParser("Nemini - A simple Gemini server"):
   p.addOption(long="--config", help="path to config file")#, default="/etc/nemini/nemini.toml")
+  p.addFlag("-v", "--version", help="shows the current nemini version")#, default="/etc/nemini/nemini.toml")
 
 var opts = p.parseOptions()
 let nemini = getNeminiConfig(opts["config"])
+
 
 proc getPage(s: Site, path: string): string =
   const extensions = [".gemini", ".gmi", ".gmni"]
@@ -73,7 +75,9 @@ proc handle(req: AsyncRequest) {.async.} =
 
 
 when isMainModule:
-  if len(nemini.listeners) > 0:
+  if opts.isSet("v") or opts.isSet("version"):
+    echo nemini.version
+  elif len(nemini.listeners) > 0:
     echo "Starting Nemini..."
     for l in nemini.listeners:
       echo "Starting listener on port : ", l.port

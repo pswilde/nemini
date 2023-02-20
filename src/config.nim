@@ -3,6 +3,7 @@ import parsetoml
 
 type
   Nemini* = object
+    version*: string
     listeners*: seq[Listener]
   Listener* = object
     port*: int
@@ -15,6 +16,22 @@ type
     aliases*: seq[string]
     root_dir*: string
     index*: string
+
+proc getVersion(): string =
+  # Get the version number from nimble file
+  # TODO probably a better way to do this but it works
+  let c = staticRead("../nemini.nimble")
+  let l = c.find("version")
+  let e = c.find("=",l)
+  let cr = c.find("\n",e)
+  let v = c[e+1..cr-1]
+  let version = v.strip(chars = {' ','"'})
+  return version
+
+const VERSION = getVersion()
+
+proc newNemini(): Nemini =
+  return Nemini(version: VERSION)
 
 proc newSite(): Site =
   return Site(index: "index.gemini")
@@ -35,7 +52,7 @@ proc getSiteConfig(toml: TomlValueRef): Site =
   return site
 
 proc getNeminiConfig*(file: string): Nemini =
-  var nemini = Nemini()
+  var nemini = newNemini()
   var cfg = "./config/nemini.sample.toml"
   if file != "":
     cfg = file
