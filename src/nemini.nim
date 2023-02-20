@@ -65,8 +65,8 @@ proc createCerts(l: Listener): bool =
         an
   alt_names = alt_names.concat(alt_sites_alt_names)
   echo alt_names
-  var cmd = "openssl req -new -newkey rsa:4096 -days 9999 "
-  cmd    &= "-subj \"/C=US/ST=Denial/L=Springfield/O=Dis/CN=" & cn & "\" "
+  var cmd = "openssl req -new -newkey rsa:4096 -days " & $l.cert.days & " "
+  cmd    &= "-subj \"/C=" & l.cert.commonName & "/ST=" & l.cert.state & "/L=" & l.cert.locality & "/O=" & l.cert.organization & "/CN=" & cn & "\" "
   if len(alt_names) > 0:
     var san = "-addext \"subjectAltName="
     for n in alt_names:
@@ -74,13 +74,13 @@ proc createCerts(l: Listener): bool =
     san = san[0 .. ^3]
     san &= "\" "
     cmd &= san
-  cmd    &= "-nodes -x509 -keyout " & l.private_key & " -out " & l.fullchain
+  cmd    &= "-nodes -x509 -keyout " & l.cert.private_key & " -out " & l.cert.fullchain
   echo cmd
   let output = execCmd(cmd)
   return output == 0
 
 proc hasCerts(l: Listener): bool =
-  if fileExists(l.fullchain) and fileExists(l.private_key):
+  if fileExists(l.cert.fullchain) and fileExists(l.cert.private_key):
     return true
   else:
     return createCerts(l)
@@ -119,7 +119,7 @@ when isMainModule:
     for l in nemini.listeners:
       echo "Starting listener on port : ", l.port
       if l.hasCerts():
-        var server = newAsyncGeminiServer(certFile = l.fullchain, keyFile = l.private_key)
+        var server = newAsyncGeminiServer(certFile = l.cert.fullchain, keyFile = l.cert.private_key)
         # TODO send the site into the handle callback for less work finding the site later
         asyncCheck server.serve(Port(l.port), handle)
     runForever()

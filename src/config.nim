@@ -8,8 +8,15 @@ type
   Listener* = object
     port*: int
     sites*: seq[Site]
+    cert*: Cert
+  Cert* = object
     fullchain*: string
     private_key*: string
+    days*: int
+    common_name*: string
+    state*: string
+    locality*: string
+    organization*: string
   Site* = object
     name*: string
     base_url*: string
@@ -36,8 +43,17 @@ proc newNemini*(): Nemini =
 proc newSite(): Site =
   return Site(index: "index.gemini")
 
+proc newCert(): Cert =
+  var c = Cert()
+  c.days = 365
+  c.common_name = "XX"
+  c.state = "XX"
+  c.locality = "XX"
+  c.organization = "XX"
+  return c
+
 proc newListener(): Listener =
-  return Listener(port: 1965)
+  return Listener(port: 1965, cert: newCert())
 
 proc getSiteConfig(toml: TomlValueRef): Site =
   var site = newSite()
@@ -68,16 +84,16 @@ proc getNeminiConfig*(file: string): Nemini =
   let toml = parsetoml.parseFile(cfg)
   for l in toml["listeners"].getElems:
     var listener = newListener()
-    listener.fullchain = l.getOrDefault("fullchain").getStr
-    listener.private_key = l.getOrDefault("private_key").getStr
+    listener.cert.fullchain = l.getOrDefault("fullchain").getStr
+    listener.cert.private_key = l.getOrDefault("private_key").getStr
     if l.hasKey("port"):
       listener.port = l.getOrDefault("port").getInt
     for s in l["sites"].getElems:
       listener.sites.add(getSiteConfig(s))
-    if listener.fullchain == "":
-      listener.fullchain = "certs/" & listener.sites[0].base_url & ".cert"
-    if listener.private_key == "":
-      listener.private_key = "certs/" & listener.sites[0].base_url & ".key"
+    if listener.cert.fullchain == "":
+      listener.cert.fullchain = "certs/" & listener.sites[0].base_url & ".cert"
+    if listener.cert.private_key == "":
+      listener.cert.private_key = "certs/" & listener.sites[0].base_url & ".key"
     nemini.listeners.add(listener)
   return nemini
 
