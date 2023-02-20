@@ -9,7 +9,8 @@ Leveraging the good work done by @benob for the [Nim Gemini Library](https://git
 
 ## Features
 * Will currently only serve static files
-* Has a sort of virtual host capability (with multiple aliases)
+* Has virtual host capability with aliases
+* Header and Footer can be applied to each page
 * Is basically just a small test project of mine while I'm exploring the Gemini protocol but this is a functional server
 
 ## How to run
