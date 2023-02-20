@@ -13,3 +13,4 @@ bin           = @["nemini"]
 requires "nim >= 1.6.0"
 requires "gemini >= 0.2.0"
 requires "parsetoml >= 0.6.0"
+requires "simpleargs >= 0.1.0"

@@ -1,86 +1,58 @@
 import asyncdispatch,os,osproc,sugar,strutils
+import config
 import gemini
-import parsetoml
+import simpleargs
 
-type
-  Nemini = object
-    sites: seq[Site]
-  Site = object
-    name: string
-    base_url: string
-    aliases: seq[string]
-    root_dir: string
-    index: string
-    fullchain: string
-    private_key: string
-    port: int
 
-const extensions = [".gemini", ".gmi", ".gmni"]
-proc newSite(): Site =
-  return Site(index: "index.gemini", port: 1965)
+var p: ParseSchema
+p.initParser("Nemini - A simple Gemini server"):
+  p.addOption(long="--config", help="path to config file")#, default="/etc/nemini/nemini.toml")
+
+var opts = p.parseOptions()
+let nemini = getNeminiConfig(opts["config"])
 
 proc getPage(s: Site, path: string): string =
+  const extensions = [".gemini", ".gmi", ".gmni"]
   var p = path
   if path == "" or path == "/":
     p = s.index
   let page = s.root_dir / p
   for ext in extensions:
-    let p = page & ext
-    if fileExists(p):
-      return readFile(p)
+    # If the given url already has an extension
+    if ext in page:
+      return readFile(page)
+    # otherwise check it's a valid one
+    let pe = page & ext
+    if fileExists(pe):
+      return readFile(pe)
+
+  # Removed for security - could potentially open any file on file system
   #if fileExists(page):
   #  return readFile(page)
   return ""
 
-proc createCerts(site: Site): bool =
-  echo "Creating certificates for " & site.name
-  let cmd = "openssl req -new -newkey rsa:4096 -days 365 -subj \"/C=US/ST=Denial/L=Springfield/O=Dis/CN=" & site.base_url & "\" -nodes -x509 -keyout " & site.private_key & " -out " & site.fullchain
+proc createCerts(l: Listener): bool =
+  let site = l.sites[0]
+  echo "Creating certificates for ", site.name
+  let cmd = "openssl req -new -newkey rsa:4096 -days 365 -subj \"/C=US/ST=Denial/L=Springfield/O=Dis/CN=" & site.base_url & "\" -nodes -x509 -keyout " & l.private_key & " -out " & l.fullchain
   let output = execCmd(cmd)
   return output == 0
 
-proc hasCerts(site: Site): bool =
-  if fileExists(site.fullchain) and fileExists(site.private_key):
+proc hasCerts(l: Listener): bool =
+  if fileExists(l.fullchain) and fileExists(l.private_key):
     return true
   else:
-    return createCerts(site)
+    return createCerts(l)
   return false
 
-proc getConfig(): Nemini =
-  var nemini = Nemini()
-  var dir = "config"
-  if dirExists("/etc/nemini"):
-    dir = "/etc/nemini"
-  for f in walkDir(dir):
-    var site = newSite()
-    let toml = parsetoml.parseFile(f.path)
-    site.name = toml.getOrDefault("name").getStr
-    site.base_url = toml.getOrDefault("base_url").getStr
-    if toml.hasKey("aliases"):
-      for x in toml["aliases"].getElems:
-        site.aliases.add(x.getStr)
-    site.root_dir = toml.getOrDefault("root_dir").getStr
-    if site.root_dir.contains("{pwd}"):
-      site.root_dir = site.root_dir.replace("{pwd}",getCurrentDir())
-    site.fullchain = toml.getOrDefault("fullchain").getStr
-    if site.fullchain == "":
-      site.fullchain = "certs/" & site.base_url & ".cert"
-    site.private_key = toml.getOrDefault("private_key").getStr
-    if site.private_key == "":
-      site.private_key = "certs/" & site.base_url & ".key"
-    if toml.hasKey("port"):
-      site.port = toml.getOrDefault("port").getInt
-    nemini.sites.add(site)
-  return nemini
-
-let config = getConfig()
-
 proc findSite(url: string): Site =
-  # TODO we might want to use multiple urls so maybe save some alias in a sequence and check those too?
-  let site = collect:
-    for s in config.sites:
-      if s.base_url == url or s.aliases.contains(url):
-        s
-  return site[0]
+  # TODO probably could do this better, ideally passing the listener into the handle procedure may make this a little nicer
+  let sites = collect:
+    for l in nemini.listeners:
+      for s in l.sites:
+        if s.base_url == url or s.aliases.contains(url):
+          s
+  return sites[0]
 
 proc handle(req: AsyncRequest) {.async.} =
   try:
@@ -89,21 +61,24 @@ proc handle(req: AsyncRequest) {.async.} =
     # TODO if a file exists in the root directory use it, if not show an error
     let page = site.getPage(req.url.path)
     if page != "":
-      echo "OK : ", req.url.path
+      echo "Found : ", req.url.hostname / req.url.path
       await req.respond(Success, "text/gemini", page)
     else:
+      # TODO probably generate some better errors here
       echo "NotFound : ", req.url.path
       await req.respond(NotFound, "text/gemini", "# Page Not Found!")
   except:
     echo "ERROR: " & getCurrentExceptionMsg()
     await req.respond(ERROR, "text/gemini", "# Server Error")
 
+
 when isMainModule:
-  echo "Starting Nemini..."
-  for site in config.sites:
-    echo "Starting site ", site.name, " on gemini://", site.base_url, ":", site.port
-    if site.hasCerts():
-      var server = newAsyncGeminiServer(certFile = site.fullchain, keyFile = site.private_key)
-      # TODO send the site into the handle callback for less work finding the site later
-      asyncCheck server.serve(Port(site.port), handle)
-  runForever()
+  if len(nemini.listeners) > 0:
+    echo "Starting Nemini..."
+    for l in nemini.listeners:
+      echo "Starting listener on port : ", l.port
+      if l.hasCerts():
+        var server = newAsyncGeminiServer(certFile = l.fullchain, keyFile = l.private_key)
+        # TODO send the site into the handle callback for less work finding the site later
+        asyncCheck server.serve(Port(l.port), handle)
+    runForever()
