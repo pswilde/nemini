@@ -1,7 +1,7 @@
 # Nemini 
 ### '/nɛmɪnaɪ/' _Nem-in-eye_
 
-Web : https://paulwilde.uk/nemini  
+Web : https://paulwilde.uk/dev/nemini  
 A simple (to configure) Gemini server capable of serving static files with virtual host support.  
 Leveraging the good work done by @benob for the [Nim Gemini Library](https://github.com/benob/gemini)
 
