@@ -1,6 +1,6 @@
 # Package
 
-version       = "0.2.2"
+version       = "0.2.3"
 author        = "Paul Wilde"
 description   = "A basic Gemini server"
 license       = "AGPL-3.0-or-later"
