@@ -1,6 +1,6 @@
 # Package
 
-version       = "0.1.0"
+version       = "0.2.1"
 author        = "Paul Wilde"
 description   = "A basic Gemini server"
 license       = "AGPL-3.0-or-later"
@@ -10,6 +10,6 @@ bin           = @["nemini"]
 
 # Dependencies
 
-requires "nim >= 1.6.10"
+requires "nim >= 1.6.0"
 requires "gemini >= 0.2.0"
-requires "parsetoml"
+requires "parsetoml >= 0.6.0"

@@ -15,6 +15,7 @@ type
     private_key: string
     port: int
 
+const extensions = [".gemini", ".gmi", ".gmni"]
 proc newSite(): Site =
   return Site(index: "index.gemini", port: 1965)
 
@@ -23,20 +24,13 @@ proc getPage(s: Site, path: string): string =
   if path == "" or path == "/":
     p = s.index
   let page = s.root_dir / p
-  let 
-    page_gemini = page & ".gemini"
-    page_gmi = page & ".gmi"
-    page_gmni = page & ".gmni"
-  if fileExists(page):
-    return readFile(page)
-  elif fileExists(page_gemini):
-    return readFile(page_gemini)
-  elif fileExists(page_gmi):
-    return readFile(page_gmi)
-  elif fileExists(page_gmni):
-    return readFile(page_gmni)
-  else:
-    return ""
+  for ext in extensions:
+    let p = page & ext
+    if fileExists(p):
+      return readFile(p)
+  #if fileExists(page):
+  #  return readFile(page)
+  return ""
 
 proc createCerts(site: Site): bool =
   echo "Creating certificates for " & site.name

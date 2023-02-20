@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added 
 
 ### Fixed
+- Lowered required Nim version to 1.6.0
+- Removed ability to open any file extension if given in the url (concerns about security). Can now only serve .gemini, .gmi or .gmni files  
 
 ## [0.1.0]
 
