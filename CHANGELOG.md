@@ -9,8 +9,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 ### Fixed
+
+## [0.2.3]
+
+### Added
+- headers and footers!
+### Fixed
 - will now generate certs with alt names
 - Error messages a little better
+- Issue where pages will always show even if they don't exist due to the header and footer
 ### Removed
 
 ## [0.2.2]

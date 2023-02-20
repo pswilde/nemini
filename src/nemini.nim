@@ -32,6 +32,8 @@ proc getPage(s: Site, path: string): string =
     let pe = page & ext
     if fileExists(pe):
       content &= readFile(pe)
+  if content == "":
+    return content
 
   let header = s.root_dir / "header.gemini"
   let footer = s.root_dir / "footer.gemini"
