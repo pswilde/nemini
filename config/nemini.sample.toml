@@ -1,8 +1,16 @@
 [[listeners]]
 
 port = 1965
+
+[listeners.cert]
 fullchain = "certs/server,cert"
 private_key = "certs/priv.key"
+days = 365
+country = "GB"
+state = "myState"
+locality = "myCity"
+organization = "myOrganizationName"
+
 
 [[listeners.sites]]
 name = "demo_site"

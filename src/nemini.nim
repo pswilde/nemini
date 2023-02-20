@@ -66,7 +66,7 @@ proc createCerts(l: Listener): bool =
   alt_names = alt_names.concat(alt_sites_alt_names)
   echo alt_names
   var cmd = "openssl req -new -newkey rsa:4096 -days " & $l.cert.days & " "
-  cmd    &= "-subj \"/C=" & l.cert.commonName & "/ST=" & l.cert.state & "/L=" & l.cert.locality & "/O=" & l.cert.organization & "/CN=" & cn & "\" "
+  cmd    &= "-subj \"/C=" & l.cert.country & "/ST=" & l.cert.state & "/L=" & l.cert.locality & "/O=" & l.cert.organization & "/CN=" & cn & "\" "
   if len(alt_names) > 0:
     var san = "-addext \"subjectAltName="
     for n in alt_names:

@@ -13,7 +13,7 @@ type
     fullchain*: string
     private_key*: string
     days*: int
-    common_name*: string
+    country*: string
     state*: string
     locality*: string
     organization*: string
@@ -46,10 +46,10 @@ proc newSite(): Site =
 proc newCert(): Cert =
   var c = Cert()
   c.days = 365
-  c.common_name = "XX"
-  c.state = "XX"
-  c.locality = "XX"
-  c.organization = "XX"
+  c.country = "GB"
+  c.state = "myState"
+  c.locality = "myCity"
+  c.organization = "myOrganizationName"
   return c
 
 proc newListener(): Listener =
@@ -84,8 +84,20 @@ proc getNeminiConfig*(file: string): Nemini =
   let toml = parsetoml.parseFile(cfg)
   for l in toml["listeners"].getElems:
     var listener = newListener()
-    listener.cert.fullchain = l.getOrDefault("fullchain").getStr
-    listener.cert.private_key = l.getOrDefault("private_key").getStr
+    if l.hasKey("cert"):
+      let cert = l["cert"].getTable
+      listener.cert.fullchain = cert.getOrDefault("fullchain").getStr
+      listener.cert.private_key = cert.getOrDefault("private_key").getStr
+      if cert.hasKey("days"):
+        listener.cert.days = cert["days"].getInt
+      if cert.hasKey("country"):
+        listener.cert.country = cert["country"].getStr
+      if cert.hasKey("state"):
+        listener.cert.state = cert["state"].getStr
+      if cert.hasKey("locality"):
+        listener.cert.locality = cert["locality"].getStr
+      if cert.hasKey("organization"):
+        listener.cert.organization = cert["organization"].getStr
     if l.hasKey("port"):
       listener.port = l.getOrDefault("port").getInt
     for s in l["sites"].getElems:

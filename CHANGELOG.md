@@ -10,10 +10,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 ### Fixed
 
+## [0.2.4]
+
+### Added
+- Created better defaults for certificate. Also can be changed in config
+
+### Fixed
+
 ## [0.2.3]
 
 ### Added
 - headers and footers!
+
 ### Fixed
 - will now generate certs with alt names
 - Error messages a little better
