@@ -4,6 +4,7 @@
 Web : https://paulwilde.uk/dev/nemini  
 Gemini : gemini://paulwilde.uk/dev/nemini  
 A simple (to configure) Gemini server capable of serving static files with virtual host support.  
+Nemini also has a basic header/footer implementation - you can create a header and footer .gemini file in your root which will be applied to each page!  
 Leveraging the good work done by @benob for the [Nim Gemini Library](https://github.com/benob/gemini)
 
 ## Features

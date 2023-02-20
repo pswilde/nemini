@@ -23,19 +23,27 @@ proc getPage(s: Site, path: string): string =
   if path == "" or path == "/":
     p = s.index
   let page = s.root_dir / p
+  var content = ""
   for ext in extensions:
     # If the given url already has an extension
     if ext in page:
-      return readFile(page)
+      content &= readFile(page)
     # otherwise check it's a valid one
     let pe = page & ext
     if fileExists(pe):
-      return readFile(pe)
+      content &= readFile(pe)
+
+  let header = s.root_dir / "header.gemini"
+  let footer = s.root_dir / "footer.gemini"
+  if fileExists(header):
+    content = readFile(header) & content
+  if fileExists(footer):
+    content = content & readFile(footer)
 
   # Removed for security - could potentially open any file on file system
   #if fileExists(page):
   #  return readFile(page)
-  return ""
+  return content
 
 proc createCerts(l: Listener): bool =
   let base_site = l.sites[0]
