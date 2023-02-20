@@ -96,10 +96,10 @@ proc handle(req: AsyncRequest) {.async.} =
     else:
       # TODO probably generate some better errors here
       echo "NotFound : ", req.url.path
-      await req.respond(NotFound, "text/gemini", "# Page Not Found!")
+      await req.respond(NotFound, "Page Not Found!")
   except:
     echo "ERROR: " & getCurrentExceptionMsg()
-    await req.respond(ERROR, "text/gemini", "# Server Error")
+    await req.respond(ERROR, "Server Error")
 
 
 when isMainModule:

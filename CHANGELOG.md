@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 ### Fixed
 - will now generate certs with alt names
+- Error messages a little better
 ### Removed
 
 ## [0.2.2]
