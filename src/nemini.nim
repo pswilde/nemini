@@ -11,7 +11,7 @@ p.initParser("Nemini - A simple Gemini server"):
 
 var opts = p.parseOptions()
 if opts.isSet("v") or opts.isSet("version"):
-  echo newNemini().version
+  echo "Nemini Version : ", newNemini().version
   quit(0)
 
 let nemini = getNeminiConfig(opts["config"])
