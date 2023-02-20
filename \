@@ -1,4 +1,4 @@
-import asyncdispatch,os,osproc,sugar,strutils,sequtils
+import asyncdispatch,os,osproc,sugar,strutils,sequrtils
 import config
 import gemini
 import simpleargs
@@ -47,24 +47,12 @@ proc createCerts(l: Listener): bool =
   let alt_sites_cn = collect:
     for n in l.sites:
       n.base_url
-  alt_names = alt_names.concat(alt_sites_cn)
+  alt_names.concat(alt_sites_cn)
   let alt_sites_alt_names = collect:
     for n in l.sites:
       for an in n.aliases:
         an
-  alt_names = alt_names.concat(alt_sites_alt_names)
-  echo alt_names
-  var cmd = "openssl req -new -newkey rsa:4096 -days 9999 "
-  cmd    &= "-subj \"/C=US/ST=Denial/L=Springfield/O=Dis/CN=" & cn & "\" "
-  if len(alt_names) > 0:
-    var san = "-addext \"subjectAltName="
-    for n in alt_names:
-      san  &= "DNS:" & n & ", "
-    san = san[0 .. ^3]
-    san &= "\" "
-    cmd &= san
-  cmd    &= "-nodes -x509 -keyout " & l.private_key & " -out " & l.fullchain
-  echo cmd
+  let cmd = "openssl req -new -newkey rsa:4096 -days 365 -subj \"/C=US/ST=Denial/L=Springfield/O=Dis/CN=" & cn & "\" -nodes -x509 -keyout " & l.private_key & " -out " & l.fullchain
   let output = execCmd(cmd)
   return output == 0
 
