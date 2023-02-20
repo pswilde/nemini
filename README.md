@@ -1,6 +1,6 @@
 # Nemini 
 ### '/nɛmɪnaɪ/' _Nem-in-eye_
-A very basic Gemini server capable of serving static files with virtual host support.  
+A simple (to configure) Gemini server capable of serving static files with virtual host support.  
 Leveraging the good work done by @benob for the [Nim Gemini Library](https://github.com/benob/gemini)
 
 ## Features
