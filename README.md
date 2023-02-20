@@ -13,7 +13,7 @@ Leveraging the good work done by @benob for the [Nim Gemini Library](https://git
 * Fixed in 0.2.0 ~~Copy and edit the `config/example_site.toml` file to your needs (multiple sites can be run by having multiple config files - currently different vhosts require different ports. This is WIP)~~
 * Certificates are **REQUIRED**, so make sure you have those set in your config. (Automatically created if they don't exist)
 * Host your files in the desired `root_dir` directory
-   * Run the `nemini` binary
+* Run the `nemini` binary
 
 ### Parameters
 Passing `--config` parameter with a config file location will allow the use of a custom config file saved wherever you wish.
