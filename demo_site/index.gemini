@@ -1,4 +1,3 @@
-# Nemini
 The simple Gemini server
 It looks like things are running, that's great!
 Copy the nemini.sample.toml file to /etc/nemini/nemini.toml and edit to your needs.
