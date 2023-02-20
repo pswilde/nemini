@@ -1,0 +1,34 @@
+[listeners]
+
+[[listeners]]
+
+port = 1965
+fullchain = "certs/server,cert"
+private_key = "certs/priv.key"
+
+[[listeners.sites]]
+name = "demo_site"
+base_url = "localhost"
+aliases = ["127.0.0.1"]
+root_dir = "{pwd}/demo_site"
+index = "index.gemini"
+
+# Another site on the same port
+#[[listeners.sites]]
+#name = "another site on the same port"
+#base_url = "a.n.other"
+#root_dir = "content/dir"
+
+
+# Another Listener on a different port
+#[[listeners]]
+# 
+#port = 1966
+#fullchain = "path/to/other,cert"
+#private_key = "path/to/other.key"
+#
+#[[listeners.sites]]
+#name = "another site"
+#base_url = "example.com"
+#root_dir = "path/to/content/dir
+
