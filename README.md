@@ -1,5 +1,7 @@
 # Nemini 
 ### '/nɛmɪnaɪ/' _Nem-in-eye_
+
+Web : https://paulwilde.uk/nemini  
 A simple (to configure) Gemini server capable of serving static files with virtual host support.  
 Leveraging the good work done by @benob for the [Nim Gemini Library](https://github.com/benob/gemini)
 
@@ -26,3 +28,7 @@ If certificates don't exist they will be created via openssl when first run.
 Nemini is able to serve static gemtext files from your root directory or subdirectories.  
 Your static files must use the extension `.gemini`, `.gmi` or `.gmni`. Currently, other file extensions are not supported, but easily fixed if there's need for it. 
 
+## Contact me
+Say "Hi"!  
+I'm on the Fediverse at [@paul@notnull.click](https://notnull.click/paul)  
+Or raise an issue here (Codeberg) for anything related to issues with Nemini
