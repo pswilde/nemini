@@ -1,4 +1,4 @@
-import os,strutils,tables
+import os,strutils
 import parsetoml
 
 type
