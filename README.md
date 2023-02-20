@@ -1,4 +1,4 @@
-# Nemini [![Build Status](https://nimble.directory/ci/badges/jester/nimdevel/status.svg)](https://nimble.directory/ci/badges/jester/nimdevel/output.html)
+# Nemini ('/nɛmɪnaɪ/' _Nem-in-eye_) [![Build Status](https://nimble.directory/ci/badges/jester/nimdevel/status.svg)](https://nimble.directory/ci/badges/jester/nimdevel/output.html)
 A very basic Gemini server capable of serving static files with virtual host support.  
 Leveraging the good work done by @benob for the [Nim Gemini Library](https://github.com/benob/gemini)
 
