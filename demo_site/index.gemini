@@ -3,3 +3,10 @@ It looks like things are running, that's great!
 Copy the nemini.sample.toml file to /etc/nemini/nemini.toml and edit to your needs.
 
 Good luck!
+
+## Capabilities
+* Virtual Hosts and Aliases - Run multiple sites from the same server
+* Headers and Footers - have the same content appear on all pages
+* Redirects
+=> /redirect_from Redirect Test
+

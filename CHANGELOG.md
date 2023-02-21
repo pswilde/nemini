@@ -8,6 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- added extra line if a footer exists to be placed before the footer (so content doesn't mush up)
+- added redirect functionality - make the first page of the content a 3 followed by the url to redirect to
 ### Fixed
 
 ## [0.2.4]

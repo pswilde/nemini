@@ -16,7 +16,31 @@ if opts.isSet("v") or opts.isSet("version"):
 
 let nemini = getNeminiConfig(opts["config"])
 
-proc getPage(s: Site, path: string): string =
+proc checkStatusCodes(content: string): (int, string) =
+  if content == "":
+    # Temporary failure
+    return (51,content)
+  case content[0]:
+    of '3':
+      let code = content[0..1].parseInt
+      # Redirect - 30 == temporary, 31 == permanent
+      return (code,content[3..^2])
+    else:
+      # There's content, return it
+      return (20,content)
+
+proc addHeaderAndFooter(content: var string, site: Site): string =
+  let header = site.root_dir / "header.gemini"
+  let footer = site.root_dir / "footer.gemini"
+  if fileExists(header):
+    content = readFile(header) & content
+  if fileExists(footer):
+    content &= "\r\n"
+    content = content & readFile(footer)
+  return content
+
+
+proc getContent(s: Site, path: string): string =
   const extensions = [".gemini", ".gmi", ".gmni"]
   var p = path
   if path == "" or path == "/":
@@ -39,16 +63,10 @@ proc getPage(s: Site, path: string): string =
   if content == "":
     return content
 
-  let header = s.root_dir / "header.gemini"
-  let footer = s.root_dir / "footer.gemini"
-  if fileExists(header):
-    content = readFile(header) & content
-  if fileExists(footer):
-    content = content & readFile(footer)
-
   # Removed for security - could potentially open any file on file system
   #if fileExists(page):
   #  return readFile(page)
+  
   return content
 
 proc createCerts(l: Listener): bool =
@@ -104,14 +122,26 @@ proc handle(req: AsyncRequest) {.async.} =
     # TODO go and find the site - not ideal, need to work out how to send the site the callback
     let site = findSite(req.url.hostname)
     # TODO if a file exists in the root directory use it, if not show an error
-    let page = site.getPage(req.url.path)
-    if page != "":
-      echo "Found : ", req.url.hostname / req.url.path
-      await req.respond(Success, "text/gemini", page)
-    else:
-      # TODO probably generate some better errors here
-      echo "NotFound : ", req.url.path
-      await req.respond(NotFound, "Page Not Found!")
+    var content = site.getContent(req.url.path)
+    let (status,meta) = content.checkStatusCodes()
+    content = content.addHeaderAndFooter(site)
+    let furl = req.url.hostname / req.url.path
+    case status:
+      of 20:
+        echo "Found : ", req.url.hostname / req.url.path
+        await req.respond(Success, "text/gemini", content)
+      of 30:
+        echo "TempRedirect : ", furl , " to ", meta
+        await req.respond(Redirect, meta)
+      of 31:
+        echo "TempRedirect : ", furl , " to ", meta
+        await req.respond(Redirect, meta)
+      of 51:
+        echo "NotFound : ", furl
+        await req.respond(NotFound, "Page Not Found.")
+      else:
+        echo "Server Unavailable : ", furl
+        await req.respond(ServerUnavailable, "Unknown Error")
   except:
     echo "ERROR: " & getCurrentExceptionMsg()
     await req.respond(ERROR, "Server Error")
