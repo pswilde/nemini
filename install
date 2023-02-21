@@ -1,5 +1,6 @@
 #!/bin/bash
 
+nimble build
 mkdir certs /etc/nemini -p
 if [ ! -f /etc/nemini/nemini.toml ]; then
     echo Creating initial config file
