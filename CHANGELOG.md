@@ -9,14 +9,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - added extra line if a footer exists to be placed before the footer (so content doesn't mush up)
-- added redirect functionality - make the first page of the content a 3 followed by the url to redirect to
+- added redirect functionality - make the first page of the content 30 or 31 followed by the url to redirect to
 ### Fixed
 
 ## [0.2.4]
 
 ### Added
 - Created better defaults for certificate. Also can be changed in config
-- Can use a url with a directory name which will return an _index.gemini/gmi/gmni file if in place
+- Can use a url with a directory name which will return an \_index.gemini/gmi/gmni file if in place
 
 ### Fixed
 
