@@ -16,7 +16,6 @@ if opts.isSet("v") or opts.isSet("version"):
 
 let nemini = getNeminiConfig(opts["config"])
 
-
 proc getPage(s: Site, path: string): string =
   const extensions = [".gemini", ".gmi", ".gmni"]
   var p = path
@@ -32,6 +31,11 @@ proc getPage(s: Site, path: string): string =
     let pe = page & ext
     if fileExists(pe):
       content &= readFile(pe)
+    # if still nothing, check to see if there's an 
+    # _index/.ge?m(in)?i/ file in the page named directory
+    let pdi = page / "_index" & ext
+    if fileExists(pdi):
+      content &= readFile(pdi)
   if content == "":
     return content
 

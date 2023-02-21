@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Created better defaults for certificate. Also can be changed in config
+- Can use a url with a directory name which will return an _index.gemini/gmi/gmni file if in place
 
 ### Fixed
 
