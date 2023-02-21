@@ -1,5 +1,8 @@
 # Nemini 
-### '/nɛmɪnaɪ/' _Nem-in-eye_
+### '/nɛmɪnaɪ/' _Nem-in-eye_  
+  
+[![Build Status](https://nimble.directory/ci/badges/nemini/nimdevel/status.svg)](https://nimble.directory/ci/badges/nemini/nimdevel/output.html)
+[![Build Status](https://nimble.directory/ci/badges/nemini/nimdevel/docstatus.svg)](https://nimble.directory/ci/badges/nemini/nimdevel/doc_build_output.html)
 
 Web : https://paulwilde.uk/dev/nemini  
 Gemini : gemini://paulwilde.uk/dev/nemini  
