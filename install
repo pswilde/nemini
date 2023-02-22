@@ -11,6 +11,8 @@ if [ "$1" == "from_make" ]; then
         echo "Creating initial config file"
         cp ./config/nemini.default.toml /etc/nemini/nemini.toml
     fi
+    echo "Copying/Updating Service Daemon"
+    cp ./nemini.service /etc/systemd/system/nemini.service
     echo Deploying/updating demo site
     mkdir /srv/gemini -p
     cp -r ./demo_site /srv/gemini/
