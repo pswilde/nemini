@@ -5,7 +5,7 @@ Description=Nemini - The simple Gemini server service
 Type=simple
 Restart=always
 RestartSec=5s
-ExecStart=/usr/local/bin/nemini
+ExecStart=/usr/local/bin/nemini --config /etc/nemini/nemini.toml
 User=nemini
 
 [Install]
