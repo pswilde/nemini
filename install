@@ -1,8 +1,19 @@
 #!/bin/bash
 
-nimble build
-mkdir certs /etc/nemini -p
-if [ ! -f /etc/nemini/nemini.toml ]; then
-    echo Creating initial config file
-    cp ./config/nemini.sample.toml /etc/nemini/
+if [ "$1" == "from_make" ]; then
+    mkdir /etc/nemini/certs -p
+    echo "Copying binary to bin"
+    cp ./nemini /usr/local/bin/
+    if [ ! -f /etc/nemini/nemini.toml ]; then
+        echo "Creating initial config file"
+        cp ./config/nemini.default.toml /etc/nemini/nemini.toml
+    fi
+    echo Deploying/updating demo site
+    mkdir /srv/gemini -p
+    cp -r ./demo_site /srv/gemini/
+    useradd nemini
+    chown -R nemini:nemini /etc/nemini
+    echo Done
+else
+    echo "This file should not be run directly, instead use \`make install\`"
 fi

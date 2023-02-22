@@ -1,0 +1,20 @@
+[[listeners]]
+
+port = 1965
+
+[listeners.cert]
+fullchain = "/etc/nemini/certs/server,cert"
+private_key = "/etc/nemini/certs/priv.key"
+days = 365
+country = "GB"
+state = "myState"
+locality = "myCity"
+organization = "myOrganizationName"
+
+[[listeners.sites]]
+name = "demo_site"
+base_url = "localhost"
+aliases = ["127.0.0.1"]
+root_dir = "/srv/gemini/demo_site"
+index = "index.gemini"
+

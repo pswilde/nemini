@@ -5,8 +5,8 @@ Description=Nemini - The simple Gemini server service
 Type=simple
 Restart=always
 RestartSec=5s
-WorkingDirectory=/opt/nemini
-ExecStart=/opt/nemini/nemini
+ExecStart=/usr/local/bin/nemini
+User=nemini
 
 [Install]
 WantedBy=multi-user.target

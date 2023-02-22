@@ -115,10 +115,13 @@ when isMainModule:
     for l in nemini.listeners:
       echo "Starting listener on port : ", l.port
       if l.hasCerts() and len(l.sites) > 0:
-        var server = newAsyncGeminiServer(certFile = l.cert.fullchain, keyFile = l.cert.private_key)
-        # TODO send the listener into the handle callback for less work finding the site later
-        asyncCheck server.serve(Port(l.port), handle)
-        echo "Started."
+        try:
+          var server = newAsyncGeminiServer(certFile = l.cert.fullchain, keyFile = l.cert.private_key)
+          # TODO send the listener into the handle callback for less work finding the site later
+          asyncCheck server.serve(Port(l.port), handle)
+          echo "Started on port : ", l.port
+        except:
+          echo "Failed to open certificate - do you have permission?"
       else:
         echo "No Certificate found for Listener : ", l.port, ". Not Starting."
     runForever()

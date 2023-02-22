@@ -1,6 +1,6 @@
 nemini
 
 certs/*
-
 config/*
+!config/nemini.default.toml
 !config/nemini.sample.toml
