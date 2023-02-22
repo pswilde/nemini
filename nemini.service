@@ -6,7 +6,6 @@ Type=simple
 Restart=always
 RestartSec=5s
 ExecStart=/usr/local/bin/nemini --config /etc/nemini/nemini.toml
-User=nemini
 
 [Install]
 WantedBy=multi-user.target
