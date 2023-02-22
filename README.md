@@ -16,6 +16,8 @@ Leveraging the good work done by @benob for the [Nim Gemini Library](https://git
 * Header and Footer can be applied to each page
 
 ## Installation
+Nemini can be installed in a variety of ways. The processes below set Nemini up in such a way that it should almost 'just work'™ (i.e. copy folders system-wide, create nemini user, create systemd service, etc.)
+
 ### Arch Linux
 Nemini is available in the AUR and can be installed via yay or your desired AUR package manager  
 ```sh
@@ -38,10 +40,11 @@ sudo make install # This will copy files and folders to system-wide locations
 ```
 
 ## How to run
-* Copy the ./config/nemini.sample.toml file to /etc/nemini/nemini.toml and edit your liking.
+* Edit the `/etc/nemini/nemini.toml` file as you need.
 * Certificates are **REQUIRED**, so make sure you have those set in your config. (Automatically created if they don't exist)
-* Host your files in the desired `root_dir` directory
-* Run the `nemini` binary
+* Host your gemini files in the desired `root_dir` directory
+  
+If Nemini has been installed via the above Installation methods, then `systemctl enable --now nemini` should start the service and get your server running. Otherwise you can run the binary directly if you have permission on the folders in your config file.
 
 ### Parameters
 Passing `--config` parameter with a config file location will allow the use of a custom config file saved wherever you wish.
