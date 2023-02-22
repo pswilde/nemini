@@ -1,4 +1,5 @@
 all: build
+.PHONY: install
 
 build:
 	nimble build

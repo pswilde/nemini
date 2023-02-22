@@ -3,7 +3,10 @@
 if [ "$1" == "from_make" ]; then
     mkdir /etc/nemini/certs -p
     echo "Copying binary to bin"
-    cp ./nemini /usr/local/bin/
+    if ! cp ./nemini /usr/local/bin/; then
+        echo "Cannot find \`nemini\` file... please run \`make\` first"
+        exit
+    fi
     if [ ! -f /etc/nemini/nemini.toml ]; then
         echo "Creating initial config file"
         cp ./config/nemini.default.toml /etc/nemini/nemini.toml

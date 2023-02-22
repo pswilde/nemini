@@ -27,7 +27,7 @@ type
 proc getVersion(): string =
   # Get the version number from nimble file
   # TODO probably a better way to do this but it works
-  let c = staticRead("../nemini.nimble")
+  let c = staticRead("../nemini_server.nimble")
   let l = c.find("version")
   let e = c.find("=",l)
   let cr = c.find("\n",e)
