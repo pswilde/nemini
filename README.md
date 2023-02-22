@@ -15,6 +15,28 @@ Leveraging the good work done by @benob for the [Nim Gemini Library](https://git
 * Has virtual host capability with aliases
 * Header and Footer can be applied to each page
 
+## Installation
+### Arch Linux
+Nemini is available in the AUR and can be installed via yay or your desired AUR package manager  
+```sh
+yay -S nemini-git
+```
+or  
+```sh
+git clone https://aur.archlinux.org/nemini-git.git
+cd nemini-git
+makepkg -si
+```
+
+### From Source
+Nemini can be easily compiled from source within a few minutes.  
+```
+git clone https://codeberg.org/pswilde/nemini.git
+cd nemini
+make              # Will build the binary, effectively just runs `nimble build`
+sudo make install # This will copy files and folders to system-wide locations
+```
+
 ## How to run
 * Copy the ./config/nemini.sample.toml file to /etc/nemini/nemini.toml and edit your liking.
 * Certificates are **REQUIRED**, so make sure you have those set in your config. (Automatically created if they don't exist)
