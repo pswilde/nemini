@@ -30,7 +30,7 @@ makepkg -si
 
 ### From Source
 Nemini can be easily compiled from source within a few minutes.  
-```
+```sh
 git clone https://codeberg.org/pswilde/nemini.git
 cd nemini
 make              # Will build the binary, effectively just runs `nimble build`
