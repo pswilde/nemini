@@ -1,6 +1,8 @@
 # Nemini 
 ### '/nɛmɪnaɪ/' _Nem-in-eye_  
   
+## The primary git repo for Nemini is on Codeberg - please use that repo - https://codeberg.org/pswilde/nemini  
+
 [![Build Status](https://nimble.directory/ci/badges/nemini/nimdevel/status.svg)](https://nimble.directory/ci/badges/nemini/nimdevel/output.html)
 [![Build Status](https://nimble.directory/ci/badges/nemini/nimdevel/docstatus.svg)](https://nimble.directory/ci/badges/nemini/nimdevel/doc_build_output.html)
 
