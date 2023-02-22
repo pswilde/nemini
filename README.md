@@ -25,7 +25,7 @@ Leveraging the good work done by @benob for the [Nim Gemini Library](https://git
 Passing `--config` parameter with a config file location will allow the use of a custom config file saved wherever you wish.
 
 ## Certificates
-The Nim Gemini Library requires certificates, so Nemini does too. 
+With Gemini, Certificates are mandatory. 
 If certificates don't exist they will be created via openssl when first run.
 
 ## Static files
