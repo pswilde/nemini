@@ -1,5 +1,4 @@
 nemini
-
 certs/*
 config/*
 !config/nemini.default.toml
