@@ -1,19 +1,21 @@
-import asyncdispatch,os,osproc,sugar,strutils,sequtils
+import asyncdispatch,os,sugar,strutils
 import config
+import certificates
 import gemini
 import simpleargs
 
+proc parseArgs(): ParsedValues =
+  var p: ParseSchema
+  p.initParser("Nemini - A simple Gemini server"):
+    p.addOption(long="--config", help="path to config file")#, default="/etc/nemini/nemini.toml")
+    p.addFlag("-v", "--version", help="shows the current nemini version")#, default="/etc/nemini/nemini.toml")
+    let opts = p.parseOptions()
+    if opts.isSet("v") or opts.isSet("version"):
+      echo "Nemini Version : ", newNemini().version
+      quit(0)
+    return opts
 
-var p: ParseSchema
-p.initParser("Nemini - A simple Gemini server"):
-  p.addOption(long="--config", help="path to config file")#, default="/etc/nemini/nemini.toml")
-  p.addFlag("-v", "--version", help="shows the current nemini version")#, default="/etc/nemini/nemini.toml")
-
-var opts = p.parseOptions()
-if opts.isSet("v") or opts.isSet("version"):
-  echo "Nemini Version : ", newNemini().version
-  quit(0)
-
+let opts = parseArgs()
 let nemini = getNeminiConfig(opts["config"])
 
 proc checkStatusCodes(content: string): (int, string) =
@@ -38,7 +40,6 @@ proc addHeaderAndFooter(content: var string, site: Site): string =
     content &= "\r\n"
     content = content & readFile(footer)
   return content
-
 
 proc getContent(s: Site, path: string): string =
   const extensions = [".gemini", ".gmi", ".gmni"]
@@ -68,45 +69,6 @@ proc getContent(s: Site, path: string): string =
   #  return readFile(page)
   
   return content
-
-proc createCerts(l: Listener): bool =
-  createDir("certs")
-  let base_site = l.sites[0]
-  echo "Creating certificates for ", base_site.name
-  let cn = base_site.base_url
-  var alt_names = collect:
-    for an in base_site.aliases:
-      an
-  let alt_sites_cn = collect:
-    for n in l.sites:
-      n.base_url
-  alt_names = alt_names.concat(alt_sites_cn)
-  let alt_sites_alt_names = collect:
-    for n in l.sites:
-      for an in n.aliases:
-        an
-  alt_names = alt_names.concat(alt_sites_alt_names)
-  echo alt_names
-  var cmd = "openssl req -new -newkey rsa:4096 -days " & $l.cert.days & " "
-  cmd    &= "-subj \"/C=" & l.cert.country & "/ST=" & l.cert.state & "/L=" & l.cert.locality & "/O=" & l.cert.organization & "/CN=" & cn & "\" "
-  if len(alt_names) > 0:
-    var san = "-addext \"subjectAltName="
-    for n in alt_names:
-      san  &= "DNS:" & n & ", "
-    san = san[0 .. ^3]
-    san &= "\" "
-    cmd &= san
-  cmd    &= "-nodes -x509 -keyout " & l.cert.private_key & " -out " & l.cert.fullchain
-  echo cmd
-  let output = execCmd(cmd)
-  return output == 0
-
-proc hasCerts(l: Listener): bool =
-  if fileExists(l.cert.fullchain) and fileExists(l.cert.private_key):
-    return true
-  else:
-    return createCerts(l)
-  return false
 
 proc findSite(url: string): Site =
   # TODO probably could do this better, ideally passing the listener into the handle procedure may make this a little nicer
@@ -152,8 +114,11 @@ when isMainModule:
     echo "Starting Nemini version : " & nemini.version
     for l in nemini.listeners:
       echo "Starting listener on port : ", l.port
-      if l.hasCerts():
+      if l.hasCerts() and len(l.sites) > 0:
         var server = newAsyncGeminiServer(certFile = l.cert.fullchain, keyFile = l.cert.private_key)
-        # TODO send the site into the handle callback for less work finding the site later
+        # TODO send the listener into the handle callback for less work finding the site later
         asyncCheck server.serve(Port(l.port), handle)
+        echo "Started."
+      else:
+        echo "No Certificate found for Listener : ", l.port, ". Not Starting."
     runForever()

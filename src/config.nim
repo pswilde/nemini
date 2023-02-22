@@ -80,7 +80,7 @@ proc getNeminiConfig*(file: string): Nemini =
   echo "Using config from : ", cfg
   if not fileExists(cfg):
     echo "Config file does not exist"
-    return 
+    quit(1)
   let toml = parsetoml.parseFile(cfg)
   for l in toml["listeners"].getElems:
     var listener = newListener()
